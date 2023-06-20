@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Todo List</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .todo-container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .todo-item input[type="checkbox"] {
+      margin-right: 10px;
+    }
+
+    .todo-item .task {
+      flex-grow: 1;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .btn-container button {
+      padding: 8px 16px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Todo List</h1>
+
+  <div class="todo-container">
+    <div id="task-list"></div>
+    <div class="btn-container">
+      <input type="text" id="new-task" placeholder="Add a new task">
+      <button onclick="addTask()">Add Task</button>
+      <button onclick="removeCompletedTasks()">Remove Completed Tasks</button>
+    </div>
+  </div>
+
+  <script>
+    var tasks = [];
+
+    function renderTasks() {
+      var taskList = document.getElementById("task-list");
+      taskList.innerHTML = "";
+
+      for (var i = 0; i < tasks.length; i++) {
+        var taskItem = document.createElement("div");
+        taskItem.className = "todo-item";
+
+        var checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = tasks[i].completed;
+        checkbox.onclick = toggleTaskCompletion.bind(null, i);
+
+        var taskText = document.createElement("span");
+        taskText.className = "task";
+        taskText.textContent = tasks[i].task;
+
+        var removeButton = document.createElement("button");
+        removeButton.textContent = "Remove";
+        removeButton.onclick = removeTask.bind(null, i);
+
+        taskItem.appendChild(checkbox);
+        taskItem.appendChild(taskText);
+        taskItem.appendChild(removeButton);
+
+        taskList.appendChild(taskItem);
+      }
+    }
+
+    function addTask() {
+      var newTaskInput = document.getElementById("new-task");
+      var task = newTaskInput.value.trim();
+
+      if (task !== "") {
+        tasks.push({ task: task, completed: false });
+        newTaskInput.value = "";
+        renderTasks();
+      }
+    }
+
+    function removeTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+
+    function toggleTaskCompletion(index) {
+      tasks[index].completed = !tasks[index].completed;
+      renderTasks();
+    }
+
+    function removeCompletedTasks() {
+      tasks = tasks.filter(function (task) {
+        return !task.completed;
+      });
+      renderTasks();
+    }
+
+    renderTasks();
+  </script>
+</body>
+</html>
